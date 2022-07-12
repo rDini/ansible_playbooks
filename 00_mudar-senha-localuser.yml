@@ -1,0 +1,17 @@
+# DINI
+- name: CHANGE PASSWORD
+  hosts: all
+  become: true
+  vars_prompt:
+    - name: USERCHPASS
+      prompt: "Username to change passwd"
+      private: no
+    - name: PASS2CH
+      prompt: "Password"
+      private: yes
+  tasks:
+    - name: change password
+      ansible.builtin.user:
+        name: "{{ USERCHPASS }}"
+        state: present
+        password: "{{ PASS2CH | password_hash('sha512') }}"

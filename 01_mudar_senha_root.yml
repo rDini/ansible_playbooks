@@ -1,0 +1,27 @@
+# Provided by Francisco Castro ! and appreciated !
+- name: change password of Linux root user
+  hosts: '{{ target }}'
+  remote_user: root
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  vars_prompt:
+  - name: target
+    prompt: Insert target FQDN or Ansible host group
+    private: no
+  - name: passwd
+    prompt: Enter password
+    unsafe: yes
+    private: yes
+    confirm: yes
+    salt_size: 10
+  tasks:
+  - name: A T T E N T I O N
+    pause:
+      prompt: "This playbook doesn't store passwords. Store your password in a safe place! (Press Enter to continue)"
+  - name: change password
+    user:
+      name: "{{ item }}"
+      password: "{{ passwd | password_hash('sha512') }}"
+    loop:
+      - root
